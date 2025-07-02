@@ -1,0 +1,4 @@
+data:
+  url: https://huggingface.co/datasets/SetFit/bbc-news/resolve/main/bbc-text.csv
+  dir: data
+  filename: bbc-text.csv

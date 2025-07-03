@@ -1,4 +1,29 @@
+random_state: 2025
+
+folders:
+  data: artifacts/data
+  models: artifacts/models
+  eval: artifacts/evaluation
+
 data:
   url: https://huggingface.co/datasets/SetFit/bbc-news/resolve/main/bbc-text.csv
-  dir: artifacts/data
   filename: bbc-text.csv
+  train_val_test_split:
+    - 0.70
+    - 0.15
+    - 0.15
+
+feature_eng:
+  tfidf:
+    max_features: 1000
+    stop_words: 'english'
+    max_features: 1000
+    # token_pattern: '\b[a-zA-Z]{2,}\b'  # Only alphabetic words, 2+ chars
+    # min_df: 2,           # Ignore words appearing in <2 documents
+    # max_df: 0.95,        # Ignore words appearing in >95% of documents
+    # lowercase: True,     # Normalize case
+    # ngram_range: (1, 1)  # Unigrams only
+
+model:
+  logistic_regression:
+    max_iter: 1000

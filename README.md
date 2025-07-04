@@ -66,7 +66,7 @@ make run-docker
 - Logs are saved to `artifacts/app.log` **locally**.
 
 ### Local Usage
-- Additional `make` commands are available to lint, test and run the code locally.
+- Additional `make` commands are available to lint, format, test and run the code locally.
 - To run notebooks, run the below commands and then open the notebook with the “BBC News” kernel:
     ```bash
     python3 -m venv bbc-env

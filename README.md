@@ -46,7 +46,7 @@ Error analysis for the best performing model (model 2) on the validation set use
 
     <img src="src/notebooks/confidence_distribution_model2_val.png" width="350"/>
 
-- **Confusion matrix** shows most errors are semantic overlaps (e.g. business vs politics):
+- **Confusion matrix (normalized)** shows most errors are semantic overlaps (e.g. business vs politics):
 
     <img src="src/notebooks/confusion_matrix_model2_val.png" width="350"/>
 

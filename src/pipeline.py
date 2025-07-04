@@ -93,12 +93,12 @@ def run_pipeline():
         y_test_pred_prob, y_test_pred, y_test
     )
     correct_vs_incorrect_fig.savefig(
-        config.eval_path / "correct_vs_incorrect.png", dpi=300, bbox_inches="tight"
+        config.eval_path / "correct_vs_incorrect_test.png", dpi=300, bbox_inches="tight"
     )
 
     umap_fig = plot_embeddings_with_errors(X_test_embed, y_test, y_test_pred)
     umap_fig.savefig(
-        config.eval_path / "embeddings_with_errors.png", dpi=300, bbox_inches="tight"
+        config.eval_path / "embeddings_with_errors_test.png", dpi=300, bbox_inches="tight"
     )
     errors = y_test != y_test_pred
     classes = model.classes_

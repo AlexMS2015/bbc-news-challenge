@@ -1,3 +1,4 @@
+import sys
 from pydantic import BaseModel
 import yaml
 from pathlib import Path
@@ -38,3 +39,4 @@ config = Config(**config_data)
 
 logger.remove()
 logger.add("artifacts/app.log", level="DEBUG")
+logger.add(sys.stdout, level="INFO", enqueue=True)

@@ -1,21 +1,28 @@
 from loguru import logger
 from sklearn.linear_model import LogisticRegression
+from typing import Any
+import numpy as np
 
 
-def train_logistic_regression(X, y, random_state, **logistic_params):
+def train_logistic_regression(
+    X: Any,
+    y: Any,
+    random_state: int,
+    **logistic_params
+) -> LogisticRegression:
     """
-    Trains a Logistic Regression model on the provided training data.
+    Train a Logistic Regression model on the provided data.
 
-    Parameters:
-    - X_train_tfidf: The TF-IDF transformed training features.
-    - y_train: The labels for the training data.
+    Args:
+        X: Training features.
+        y: Training labels.
+        random_state: Random seed for reproducibility.
+        **logistic_params: Additional parameters for LogisticRegression.
 
     Returns:
-    - model: The trained Logistic Regression model.
+        Trained Logistic Regression model.
     """
     logger.info("Training Logistic Regression model")
-
-    # Initialize and fit the model
 
     model = LogisticRegression(random_state=random_state, **logistic_params)
     model.fit(X, y)
@@ -23,16 +30,19 @@ def train_logistic_regression(X, y, random_state, **logistic_params):
     return model
 
 
-def predict(model, X):
+def predict(
+    model: LogisticRegression,
+    X: Any
+) -> tuple[np.ndarray, np.ndarray]:
     """
-    Makes predictions using the trained Logistic Regression model.
+    Make predictions with a trained Logistic Regression model.
 
-    Parameters:
-    - model: The trained Logistic Regression model.
-    - X: The features to predict on.
+    Args:
+        model: Trained Logistic Regression model.
+        X: Features to predict on.
 
     Returns:
-    - predictions: The predicted labels.
+        Tuple of (predicted labels, predicted probabilities).
     """
     logger.info("Making predictions with Logistic Regression model")
 

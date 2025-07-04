@@ -1,8 +1,6 @@
 import urllib.request
 from pathlib import Path
 from loguru import logger
-
-# from ..config import config
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
@@ -10,7 +8,7 @@ from sklearn.model_selection import train_test_split
 @logger.catch
 def download_data(dir: str, filename: str, url: str) -> None:
     """
-    Downloads data from a given URL to a specified directory with a specified filename.
+    Download a file from a URL into the given directory.
     """
     logger.info(f"Downloading data from {url} to {dir}/{filename}")
     path = Path(dir)
@@ -26,8 +24,7 @@ def download_data(dir: str, filename: str, url: str) -> None:
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Cleans the DataFrame by removing duplicated rows and rows with NaN values.
-    There are no NaNs in the original dataset, but this is a good practice.
+    Drop rows with NaNs in 'text' and remove duplicates.
     """
     logger.info("Cleaning data by dropping rows with NaN values in 'text' column")
     initial_shape = df.shape
@@ -37,16 +34,23 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def reset_pair(X, y):
+def reset_pair(X: pd.Series, y: pd.Series) -> tuple[pd.Series, pd.Series]:
+    """
+    Reset index for X and y.
+    """
     X = X.reset_index(drop=True)
     y = y.reset_index(drop=True)
     return X, y
 
 
-def split_data(X, y, random_state: int, test_size: float) -> tuple:
+def split_data(
+    X: pd.Series, 
+    y: pd.Series, 
+    random_state: int, 
+    test_size: float
+) -> tuple[pd.Series, pd.Series, pd.Series, pd.Series]:
     """
-    Splits the DataFrame into train, validation, and test sets.
-    The splits are defined as proportions of the original DataFrame.
+    Stratified train/test split.
     """
     logger.info("Splitting data into train, validation, and test sets")
     assert test_size < 1, "Test size must be less than 1"
@@ -61,11 +65,3 @@ def split_data(X, y, random_state: int, test_size: float) -> tuple:
     logger.info(f"Data split: {len(X_train)} train, {len(X_test)} test")
 
     return X_train, y_train, X_test, y_test
-
-
-# if __name__ == "__main__":
-#     download_data(
-#         dir=config.data['dir'],
-#         filename=config.data['filename'],
-#         url=config.data['url']
-#     )

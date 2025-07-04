@@ -15,10 +15,6 @@ feature_eng:
     model_name: 'all-MiniLM-L6-v2'
     # batch_size: 32
     device: 'cpu'
-  # tfidf:
-  #   max_features: 1000
-  #   stop_words: 'english'
-  #   token_pattern: '\b[a-zA-Z]{2,}\b'
 
 model:
   logistic_regression:

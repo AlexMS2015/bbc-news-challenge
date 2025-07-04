@@ -15,9 +15,7 @@ from .steps.train import (
 )
 from .steps.evaluate import (
     evaluate_classifier,
-    get_top_bottom_features_plot,
     correct_vs_incorrect,
-    get_local_feature_contributions,
     get_rank_and_probs,
     build_error_df,
 )
@@ -49,11 +47,11 @@ def run_pipeline():
     X_train_embed, X_test_embed = embed_text(
         X_train,
         X_test,
-        model_name=config.feature_eng["sentence_transformer"]["model_name"],
+        model_name=config.feature_eng["sentence_transformers"]["model_name"],
         device=config.feature_eng["sentence_transformers"]["device"],
     )
-    np.save(config.data_path / "X_train_embed.npy", X_train_embed.toarray())
-    np.save(config.data_path / "X_test_embed.npy", X_test_embed.toarray())
+    np.save(config.data_path / "X_train_embed.npy", X_train_embed)
+    np.save(config.data_path / "X_test_embed.npy", X_test_embed)
 
     # Train Logistic Regression model
     model = train_logistic_regression(
@@ -88,15 +86,6 @@ def run_pipeline():
         config.eval_path / "classification_report_test.csv"
     )
 
-    # Feature importance
-    # logger.info("Generating feature importance plots")
-    # features_plot = get_top_bottom_features_plot(
-    #     model.classes_, model.coef_, feature_names
-    # )
-    # features_plot.savefig(
-    #     config.eval_path / "top_features.png", bbox_inches="tight"
-    # )
-
     # Error analysis
     logger.info("Performing error analysis")
     correct_vs_incorrect_fig = correct_vs_incorrect(
@@ -109,14 +98,14 @@ def run_pipeline():
     errors = y_test != y_test_pred
     classes = model.classes_
     coef = model.coef_
-    top_features, top_contribs = get_local_feature_contributions(
-        y_test_pred[errors],
-        classes,
-        X_test_tfidf.toarray()[errors],
-        coef,
-        feature_names,
-        top_n=5,
-    )
+    # top_features, top_contribs = get_local_feature_contributions(
+    #     y_test_pred[errors],
+    #     classes,
+    #     X_test_tfidf.toarray()[errors],
+    #     coef,
+    #     feature_names,
+    #     top_n=5,
+    # )
     rank_true, prob_true, prob_pred = get_rank_and_probs(
         y_test_pred_prob[errors], y_test[errors], y_test_pred[errors], classes
     )
@@ -127,8 +116,8 @@ def run_pipeline():
         rank_true,
         prob_true,
         prob_pred,
-        top_features,
-        top_contribs,
+        # top_features,
+        # top_contribs,
     )
     error_df.to_csv(config.eval_path / "error_analysis_test.csv")
 

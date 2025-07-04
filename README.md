@@ -36,11 +36,11 @@ The goal is to correctly classify each article into one of these topics. This is
 
 ## Error Analysis
 
-Error analysis for the best performing model (model 2) on the validation set used for comparing models is below. Error analysis for other models can be found in the notebook.
+Error analysis for the best performing model (model 2) on the validation set used for comparing models is below. Error analysis for other models can be found in the notebook. The images can be clicked to increase size.
 
 - **UMAP** plots show that misclassified points lie further from their true topic clusters.
 
-    <img src="src/notebooks/umap_model2_val.png" width="350"/>
+    <img src="src/notebooks/umap_model2_val.png" width="450"/>
 
 - **Confidence plots** (max predicted probability) reveal that errors tend to occur at low confidence.
 

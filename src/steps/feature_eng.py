@@ -1,20 +1,17 @@
 from loguru import logger
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sentence_transformers import SentenceTransformer
 
 
-def apply_tfidf(text_train, text_val, text_test, **tfidf_params) -> tuple:
+def embed_text(text_train, text_test, model_name: str, device: str) -> tuple:
     """
-    Applies TF-IDF vectorization to the training, validation, and test sets.
+    Applies sentence transformer embeddings to the training and test sets.
     """
-    logger.info("Applying TF-IDF vectorization")
+    logger.info("Applying sentence transformer embeddings")
 
-    logger.debug(f"TF-IDF parameters: {tfidf_params}")
-    vectorizer = TfidfVectorizer(**tfidf_params)
-    tfidf_train = vectorizer.fit_transform(text_train)
-    tfidf_val = vectorizer.transform(text_val)
-    tfidf_test = vectorizer.transform(text_test)
-    feature_names = vectorizer.get_feature_names_out()
-    
-    logger.info("TF-IDF vectorization applied successfully")
-    
-    return vectorizer, feature_names, tfidf_train, tfidf_val, tfidf_test
+    encoder = SentenceTransformer(model_name, device=device)
+    embeddings_train = encoder.encode(text_train)
+    embeddings_test = encoder.encode(text_test)
+
+    logger.info("Sentence transformer embeddings applied successfully")
+
+    return encoder, embeddings_train, embeddings_test

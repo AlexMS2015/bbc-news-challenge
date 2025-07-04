@@ -4,6 +4,7 @@ from pathlib import Path
 from loguru import logger
 from typing import Any
 
+
 class Config(BaseModel):
     random_state: int
     folders: dict[str, str]
@@ -18,22 +19,22 @@ class Config(BaseModel):
 
     @property
     def data_path(self) -> Path:
-        return self.make_path(self.folders['data'])
-    
+        return self.make_path(self.folders["data"])
+
     @property
     def models_path(self) -> Path:
-        return self.make_path(self.folders['models'])
-    
+        return self.make_path(self.folders["models"])
+
     @property
     def eval_path(self) -> Path:
-        return self.make_path(self.folders['eval'])
+        return self.make_path(self.folders["eval"])
 
 
 path = Path(__file__).parent.parent / "config.yaml"
 with open(path, "r") as file:
     config_data = yaml.safe_load(file)
-    
+
 config = Config(**config_data)
 
 logger.remove()
-logger.add('app.log', level="DEBUG")
+logger.add("artifacts/app.log", level="DEBUG")

@@ -8,21 +8,17 @@ folders:
 data:
   url: https://huggingface.co/datasets/SetFit/bbc-news/resolve/main/bbc-text.csv
   filename: bbc-text.csv
-  train_val_test_split:
-    - 0.70
-    - 0.15
-    - 0.15
+  test_size: 0.3
 
 feature_eng:
-  tfidf:
-    max_features: 1000
-    stop_words: 'english'
-    max_features: 1000
-    # token_pattern: '\b[a-zA-Z]{2,}\b'  # Only alphabetic words, 2+ chars
-    # min_df: 2,           # Ignore words appearing in <2 documents
-    # max_df: 0.95,        # Ignore words appearing in >95% of documents
-    # lowercase: True,     # Normalize case
-    # ngram_range: (1, 1)  # Unigrams only
+  sentence_transformers:
+    model_name: 'all-MiniLM-L6-v2'
+    # batch_size: 32
+    device: 'cpu'
+  # tfidf:
+  #   max_features: 1000
+  #   stop_words: 'english'
+  #   token_pattern: '\b[a-zA-Z]{2,}\b'
 
 model:
   logistic_regression:

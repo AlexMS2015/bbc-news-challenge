@@ -4,32 +4,33 @@ create-artifact-folder:
 # Local test and run commands:
 
 create-venv: requirements-dev.txt
-	python3 -m venv bbc-env-311
-	./bbc-env-311/bin/pip install -r requirements.txt
+	python3 -m venv bbc-env
+	./bbc-env/bin/pip install -r requirements.txt
 
 lint-check: create-venv
-	./bbc-env-311/bin/ruff check --exclude notebooks
+	./bbc-env/bin/ruff check --exclude notebooks
 
 format-check: create-venv
-	./bbc-env-311/bin/ruff format --diff --exclude notebooks
+	./bbc-env/bin/ruff format --diff --exclude notebooks
 
 lint-apply: create-venv
-	./bbc-env-311/bin/ruff check --fix --exclude notebooks
+	./bbc-env/bin/ruff check --fix --exclude notebooks
 
 format-apply: create-venv
-	./bbc-env-311/bin/ruff format --exclude notebooks
+	./bbc-env/bin/ruff format --exclude notebooks
 
 fix: lint-apply format-apply
 
 test: create-venv
-	PYTHONPATH="${PYTHONPATH}:$(pwd)" ./bbc-env-311/bin/pytest
+	PYTHONPATH="${PYTHONPATH}:$(pwd)" ./bbc-env/bin/pytest
 
 run-local: create-venv create-artifact-folder
-	./bbc-env-311/bin/python -m src.pipeline
+	./bbc-env/bin/python -m src.pipeline
 
 #####################
 
 # Docker commands:
+
 build-docker:
 	docker build -t bbc-news-challenge .
 

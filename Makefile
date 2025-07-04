@@ -4,7 +4,7 @@ create-artifact-folder:
 # Local test and run commands:
 
 create-venv: requirements-dev.txt
-	python3 -m venv bbc-env-311
+	python3 -m venv bbc-env
 	./bbc-env/bin/pip install -r requirements.txt
 
 lint-check: create-venv

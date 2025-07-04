@@ -19,7 +19,7 @@ The goal is to correctly classify each article into one of these topics. This is
 
 - **Three models** (see `/src/notebooks/models.ipynb`) were trained to compare performance:
   
-| Model     | Feature Extraction      | Classifier           | Hyperparameter Tuning         | F1 Score | Accuracy |
+| Model     | Feature Extraction      | Classifier           | Hyperparameter Tuning         | F1 Score (val set) | Accuracy (val set) |
 |-----------|--------------------------|-----------------------|-------------------------------|----------|----------|
 | Baseline  | TF-IDF (1k vocab, stopwords removed) | Logistic Regression   | No                            | 0.96     | 0.96     |
 | Model 2   | Sentence Transformers (`all-MiniLM-L6-v2`) | Logistic Regression   | No                            | 0.98     | 0.98     |
@@ -28,7 +28,7 @@ The goal is to correctly classify each article into one of these topics. This is
 
 - **TF-IDF + Logistic Regression**: A strong, interpretable baseline requiring no tuning.
 - **Sentence Transformers**: Used for richer semantic embeddings. Improved performance and generalisation.
-- **XGBoost**: Tried for non-linear modeling, but offered no significant gain over logistic regression.
+- **XGBoost**: Tried for non-linear modeling, but offered no significant gain over logistic regression and required additional tuning effort.
 
 - **Metric Choice**:
   - **Accuracy** is appropriate due to balanced classes.
@@ -36,9 +36,9 @@ The goal is to correctly classify each article into one of these topics. This is
 
 ## Error Analysis
 
-Error analysis for the best performing model (model 2) on the validation set used for comparing models is below. Error analysis for other models can be found in the notebook. The images can be clicked to increase size.
+Error analysis is below for the best performing model (model 2) on the validation set. Error analysis for other models can be found in the notebook. The images can be clicked to increase size.
 
-- **UMAP** plots show that misclassified points lie further from their true topic clusters.
+- **UMAP** plots show that misclassified points lie further from their true topic clusters. The sports class is far from the other classes.
 
     <img src="src/notebooks/umap_model2_val.png" width="450"/>
 
@@ -46,7 +46,7 @@ Error analysis for the best performing model (model 2) on the validation set use
 
     <img src="src/notebooks/confidence_distribution_model2_val.png" width="350"/>
 
-- **Confusion matrix (normalized)** shows most errors are semantic overlaps (e.g. business vs politics):
+- **Confusion matrix (normalized)** shows most errors are semantic overlaps (e.g. business vs politics) although this was more apparent in the baseline model (not shown):
 
     <img src="src/notebooks/confusion_matrix_model2_val.png" width="350"/>
 
@@ -58,12 +58,12 @@ Error analysis for the best performing model (model 2) on the validation set use
 
 Model 2 (Sentence Transformers + Logistic Regression) was productionised.
 
-- To train and evaluate, run the following from the **root project directory**:
+- To train and evaluate, run the following command from the **root project directory**:
 
 ```bash
 make run-docker
 ```
-- This runs `src/pipeline.py` inside Docker using configuration from `src/config.py` (and `config.yaml`).
+- This runs `src/pipeline.py` inside Docker using configuration from `src/config.py` (which uses `config.yaml`).
 - All results are saved **locally** to the `artifacts/` directory, including metrics, plots, and model files.
 - Logs are saved to `artifacts/app.log` **locally**.
 
@@ -79,7 +79,7 @@ make run-docker
 ## Future Improvements
 
 ### Model
-- Fine-tune BERT (e.g., unfrozen classification head and other layers) for potentially higher performance.
+- Fine-tune BERT (e.g. unfrozen classification head and possibly other layers) for potentially higher performance.
 - Improve TF-IDF preprocessing: try bigrams, lemmatisation (e.g., via spaCy).
 
 ### Pipeline

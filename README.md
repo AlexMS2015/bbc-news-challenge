@@ -2,9 +2,7 @@
 
 ## Problem Statement
 
-Build a multi-class classifier on the [BBC News dataset](https://huggingface.co/datasets/SetFit/bbc-news), consisting of ~2,000 articles across five topics: business, entertainment, politics, sports, and tech.
-
-The goal is to correctly classify each article into one of these topics. This is framed as a 5-class classification task.
+Build a multi-class classifier on the [BBC News dataset](https://huggingface.co/datasets/SetFit/bbc-news), consisting of ~2,000 articles across five topics: business, entertainment, politics, sports, and tech. The goal is to correctly classify each article into one of these topics. This is framed as a 5-class classification task.
 
 
 ## Approach
@@ -63,7 +61,7 @@ Model 2 (Sentence Transformers + Logistic Regression) was productionised.
 ```bash
 make run-docker
 ```
-- This runs `src/pipeline.py` inside Docker using configuration from `src/config.py` (which uses `config.yaml`).
+- In Docker this runs runs `src/pipeline.py` which runs all the steps in `src/steps` and uses configuration from `src/config.py` (which loads config from `config.yaml`). See repo structure below.
 - All results are saved **locally** to the `artifacts/` directory, including metrics, plots, and model files.
 - Logs are saved to `artifacts/app.log` **locally**.
 

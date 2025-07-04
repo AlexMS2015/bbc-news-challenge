@@ -44,10 +44,7 @@ def reset_pair(X: pd.Series, y: pd.Series) -> tuple[pd.Series, pd.Series]:
 
 
 def split_data(
-    X: pd.Series, 
-    y: pd.Series, 
-    random_state: int, 
-    test_size: float
+    X: pd.Series, y: pd.Series, random_state: int, test_size: float
 ) -> tuple[pd.Series, pd.Series, pd.Series, pd.Series]:
     """
     Stratified train/test split.

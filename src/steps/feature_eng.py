@@ -1,13 +1,11 @@
 from loguru import logger
 from sentence_transformers import SentenceTransformer
 import numpy as np
+import pandas as pd
 
 
 def embed_text(
-    text_train: pd.Series,
-    text_test: pd.Series,
-    model_name: str,
-    device: str
+    text_train: pd.Series, text_test: pd.Series, model_name: str, device: str
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Applies sentence transformer embeddings to the training and test sets.

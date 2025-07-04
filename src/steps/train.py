@@ -5,10 +5,7 @@ import numpy as np
 
 
 def train_logistic_regression(
-    X: Any,
-    y: Any,
-    random_state: int,
-    **logistic_params
+    X: Any, y: Any, random_state: int, **logistic_params
 ) -> LogisticRegression:
     """
     Train a Logistic Regression model on the provided data.
@@ -30,10 +27,7 @@ def train_logistic_regression(
     return model
 
 
-def predict(
-    model: LogisticRegression,
-    X: Any
-) -> tuple[np.ndarray, np.ndarray]:
+def predict(model: LogisticRegression, X: Any) -> tuple[np.ndarray, np.ndarray]:
     """
     Make predictions with a trained Logistic Regression model.
 

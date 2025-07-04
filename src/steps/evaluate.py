@@ -3,7 +3,9 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
 import seaborn as sns
+import umap
 from sklearn.metrics import classification_report, ConfusionMatrixDisplay
+from sklearn.preprocessing import LabelEncoder
 
 
 def evaluate_classifier(y: pd.Series, y_pred: pd.Series, classes: list) -> tuple:
@@ -17,7 +19,9 @@ def evaluate_classifier(y: pd.Series, y_pred: pd.Series, classes: list) -> tuple
     return report, cmd
 
 
-def correct_vs_incorrect(pred_prob: pd.Series, pred: pd.Series, actual: np.ndarray) -> Figure:
+def correct_vs_incorrect(
+    pred_prob: pd.Series, pred: pd.Series, actual: np.ndarray
+) -> Figure:
     """
     Plot confidence distribution for correct vs incorrect predictions.
     """
@@ -25,8 +29,8 @@ def correct_vs_incorrect(pred_prob: pd.Series, pred: pd.Series, actual: np.ndarr
     max_probs = np.max(pred_prob, axis=1)
 
     fig, ax = plt.subplots()
-    sns.kdeplot(max_probs[~errors], label='Correct', fill=True, ax=ax)
-    sns.kdeplot(max_probs[errors], label='Incorrect', fill=True, ax=ax)
+    sns.kdeplot(max_probs[~errors], label="Correct", fill=True, ax=ax)
+    sns.kdeplot(max_probs[errors], label="Incorrect", fill=True, ax=ax)
 
     ax.set_xlabel("Max predicted probability (confidence)")
     ax.set_title("Model confidence: Correct vs. Incorrect predictions")
@@ -37,25 +41,45 @@ def correct_vs_incorrect(pred_prob: pd.Series, pred: pd.Series, actual: np.ndarr
     return fig
 
 
-# def get_class_indices(y, classes):
-#     class_to_index = {label: i for i, label in enumerate(classes)}
-#     return [class_to_index[label] for label in y]
+def plot_embeddings_with_errors(embeddings, true_labels, pred_labels):
+    """
+    Plots 2D UMAP embeddings with points colored by true class and highlights
+    misclassified points.
+    """
+    le = LabelEncoder()
+    y_true_enc = le.fit_transform(true_labels)
+    y_pred_enc = le.transform(pred_labels)
 
+    misclassified = y_true_enc != y_pred_enc
+    reducer = umap.UMAP(random_state=42)
+    reduced = reducer.fit_transform(embeddings)
 
-# def get_local_feature_contributions(
-#     y_pred, classes, X_tfidf, coef, feature_names, top_n
-# ):
-#     pred_class_idx = get_class_indices(y_pred, classes)
+    colors = plt.cm.Set1(np.linspace(0, 1, len(le.classes_)))
+    fig, ax = plt.subplots(figsize=(10, 8))
 
-#     tfidf = X_tfidf
-#     weights = coef[pred_class_idx]
-#     contribs = tfidf * weights
+    for i, label in enumerate(le.classes_):
+        is_class = y_true_enc == i
+        ax.scatter(
+            *reduced[is_class & ~misclassified].T,
+            c=[colors[i]],
+            s=30,
+            alpha=0.6,
+            label=f"{label}",
+        )
+        ax.scatter(
+            *reduced[is_class & misclassified].T,
+            c=[colors[i]],
+            s=80,
+            alpha=1.0,
+            edgecolors="black",
+            linewidth=1.5,
+            label=f"{label} incorrect",
+        )
 
-#     idx_topn = np.argsort(np.abs(contribs), axis=1)[:, -top_n:]
-#     top_features = feature_names[idx_topn]
-#     top_contribs = np.take_along_axis(contribs, idx_topn, axis=1)
-
-#     return top_features, top_contribs
+    ax.set_title("UMAP: Validation Embeddings with Misclassifications")
+    ax.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+    plt.tight_layout()
+    return fig
 
 
 def get_rank_and_probs(
@@ -85,13 +109,7 @@ def build_error_df(
     """
     error_df = (
         pd.DataFrame({"text": X_val, "true": y_val, "predicted": y_val_pred})
-        .assign(
-            rank_true=rank_true,
-            prob_true=prob_true,
-            prob_pred=prob_pred,
-            # top_features=top_features.tolist(),
-            # top_features_contrib=top_features_contrib.round(2).tolist(),
-        )
+        .assign(rank_true=rank_true, prob_true=prob_true, prob_pred=prob_pred)
         .reset_index(drop=True)
     )
 

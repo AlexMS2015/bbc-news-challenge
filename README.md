@@ -11,13 +11,13 @@ The goal is to correctly classify each article into one of these topics. This is
 
 ### 1. Design Overview
 
-- EDA (see `/src/notebooks/eda.ipynb`) revealed:
+- **EDA** (see `/src/notebooks/eda.ipynb`) revealed:
   - All text is lowercase with little punctuation.
   - Classes are well balanced.
   - 80% of articles have ≤20 unique words.
   - Top words are distinct per topic, suggesting simple models may perform well.
 
-- **Three models** were trained to compare performance:
+- **Three models** (see `/src/notebooks/models.ipynb`) were trained to compare performance:
   
 | Model     | Feature Extraction      | Classifier           | Hyperparameter Tuning         | F1 Score | Accuracy |
 |-----------|--------------------------|-----------------------|-------------------------------|----------|----------|
@@ -27,7 +27,7 @@ The goal is to correctly classify each article into one of these topics. This is
 
 
 - **TF-IDF + Logistic Regression**: A strong, interpretable baseline requiring no tuning.
-- **Sentence Transformers**: Used for richer semantic embeddings. Improved performance and generalization.
+- **Sentence Transformers**: Used for richer semantic embeddings. Improved performance and generalisation.
 - **XGBoost**: Tried for non-linear modeling, but offered no significant gain over logistic regression.
 
 - **Metric Choice**:
@@ -36,23 +36,27 @@ The goal is to correctly classify each article into one of these topics. This is
 
 ## Error Analysis
 
-- **UMAP** plots show that misclassified points lie further from their true topic clusters.
-- **Confidence plots** (max predicted probability) reveal that errors tend to occur at low confidence.
-- **Confusion matrix** shows most errors are semantic overlaps:
-  - _Business_ vs _Politics_: “education”, “government”, “health”
-  - _Tech_ vs _Entertainment_: “popular”, “awards”
-- **LIME** was attempted to interpret transformer-based predictions but was less effective due to embeddings not being token-based. This is not included in the final pipeline as it is slow and adds little value.
+Error analysis for the best performing model (model 2) on the validation set used for comparing models is below. Error analysis for other models can be found in the notebook.
 
-📊 _Suggested diagrams to include_ (optional but valuable):
-- Confusion matrix
-- UMAP projection with errors highlighted
-- Confidence KDE plot (correct vs incorrect)
+- **UMAP** plots show that misclassified points lie further from their true topic clusters.
+
+    <img src="src/notebooks/umap_model2_val.png" width="350"/>
+
+- **Confidence plots** (max predicted probability) reveal that errors tend to occur at low confidence.
+
+    <img src="src/notebooks/confidence_distribution_model2_val.png" width="350"/>
+
+- **Confusion matrix** shows most errors are semantic overlaps (e.g. business vs politics):
+
+    <img src="src/notebooks/confusion_matrix_model2_val.png" width="350"/>
+
+- **LIME** was attempted to interpret transformer-based predictions but was less effective due to embeddings not being token-based. This is not included in the final pipeline as it is slow and adds little value.
 
 ## Reproducibility
 
-### Dockerized Pipeline
+### Dockerised Pipeline
 
-Model 2 (Sentence Transformers + Logistic Regression) was productionized.
+Model 2 (Sentence Transformers + Logistic Regression) was productionised.
 
 - To train and evaluate, run the following from the **root project directory**:
 
@@ -76,7 +80,7 @@ make run-docker
 
 ### Model
 - Fine-tune BERT (e.g., unfrozen classification head and other layers) for potentially higher performance.
-- Improve TF-IDF preprocessing: try bigrams, lemmatization (e.g., via spaCy).
+- Improve TF-IDF preprocessing: try bigrams, lemmatisation (e.g., via spaCy).
 
 ### Pipeline
 - Add inference pipeline or API.

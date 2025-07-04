@@ -16,6 +16,7 @@ from .steps.train import (
 from .steps.evaluate import (
     evaluate_classifier,
     correct_vs_incorrect,
+    plot_embeddings_with_errors,
     get_rank_and_probs,
     build_error_df,
 )
@@ -95,17 +96,12 @@ def run_pipeline():
         config.eval_path / "correct_vs_incorrect.png", dpi=300, bbox_inches="tight"
     )
 
+    umap_fig = plot_embeddings_with_errors(X_test_embed, y_test, y_test_pred)
+    umap_fig.savefig(
+        config.eval_path / "embeddings_with_errors.png", dpi=300, bbox_inches="tight"
+    )
     errors = y_test != y_test_pred
     classes = model.classes_
-    coef = model.coef_
-    # top_features, top_contribs = get_local_feature_contributions(
-    #     y_test_pred[errors],
-    #     classes,
-    #     X_test_tfidf.toarray()[errors],
-    #     coef,
-    #     feature_names,
-    #     top_n=5,
-    # )
     rank_true, prob_true, prob_pred = get_rank_and_probs(
         y_test_pred_prob[errors], y_test[errors], y_test_pred[errors], classes
     )
@@ -116,8 +112,6 @@ def run_pipeline():
         rank_true,
         prob_true,
         prob_pred,
-        # top_features,
-        # top_contribs,
     )
     error_df.to_csv(config.eval_path / "error_analysis_test.csv")
 
